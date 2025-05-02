@@ -18,8 +18,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         url: configService.get<string>('database.url'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        entities: configService.get<string[]>('database.entities'),
+        synchronize: configService.get<boolean>('database.synchronize'),
       }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
