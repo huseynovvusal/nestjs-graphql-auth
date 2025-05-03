@@ -10,7 +10,6 @@ import {
 import { User } from 'src/entities/user.entity';
 import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
 @Resolver(() => User)
@@ -36,10 +35,10 @@ export class UserResolver {
     return await user.profile;
   }
 
-  @Mutation(() => User)
+  /*   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.userService.create(createUserInput);
-  }
+  } */
 
   @Mutation(() => User)
   async updateUser(
