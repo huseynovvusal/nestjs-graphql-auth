@@ -5,10 +5,12 @@ import {
   Parent,
   Args,
   Int,
+  Mutation,
 } from '@nestjs/graphql';
 import { User } from 'src/entities/user.entity';
 import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
+import { CreateUserInput } from './dto/create-user.input';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -31,5 +33,10 @@ export class UserResolver {
     this.logger.debug(`Fetching profile for user with ID: ${user.id}`);
 
     return await user.profile;
+  }
+
+  @Mutation(() => User)
+  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+    return this.userService.create(createUserInput);
   }
 }
