@@ -1,4 +1,11 @@
-import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  ResolveField,
+  Parent,
+  Args,
+  Int,
+} from '@nestjs/graphql';
 import { User } from 'src/entities/user.entity';
 import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
@@ -12,6 +19,11 @@ export class UserResolver {
   @Query(() => [User], { name: 'users' })
   async findAll() {
     return await this.userService.findAll();
+  }
+
+  @Query(() => User)
+  async getUser(@Args('id', { type: () => Int }) id: number) {
+    return await this.userService.findOne(id);
   }
 
   @ResolveField('profile')
