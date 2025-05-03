@@ -32,4 +32,10 @@ export class UserService {
       new User(Object.assign(user, updateUserInput)),
     );
   }
+
+  async remove(id: number) {
+    const result = await this.userRepository.delete(id);
+
+    return result.affected === 1;
+  }
 }

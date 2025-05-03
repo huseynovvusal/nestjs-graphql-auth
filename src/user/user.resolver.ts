@@ -48,4 +48,9 @@ export class UserResolver {
   ) {
     return await this.userService.update(id, updateUserInput);
   }
+
+  @Mutation(() => Boolean)
+  async removeUser(@Args('id', { type: () => Int }) id: number) {
+    return await this.userService.remove(id);
+  }
 }
