@@ -52,4 +52,14 @@ export class AuthService {
       refreshToken,
     };
   }
+
+  async validateJwtUser(userId: number): Promise<User> {
+    const user = await this.userRepository.findOneByOrFail({ id: userId });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
+  }
 }
