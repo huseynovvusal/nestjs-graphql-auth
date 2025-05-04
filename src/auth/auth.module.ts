@@ -9,12 +9,15 @@ import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import { GenerateTokensProvider } from './providers/generate-tokens.provider';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   providers: [
     AuthService,
@@ -25,6 +28,7 @@ import { GenerateTokensProvider } from './providers/generate-tokens.provider';
     },
     BcryptProvider,
     GenerateTokensProvider,
+    JwtStrategy,
   ],
 })
 export class AuthModule {}

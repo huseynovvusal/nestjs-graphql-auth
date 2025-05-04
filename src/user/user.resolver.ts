@@ -9,8 +9,9 @@ import {
 } from '@nestjs/graphql';
 import { User } from 'src/entities/user.entity';
 import { UserService } from './user.service';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
+import { GqlJwtGuard } from 'src/auth/guards/gql-jwt/gql-jwt.guard';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -40,6 +41,7 @@ export class UserResolver {
     return this.userService.create(createUserInput);
   } */
 
+  @UseGuards(GqlJwtGuard)
   @Mutation(() => User)
   async updateUser(
     @Args('id', { type: () => Int }) id: number,
