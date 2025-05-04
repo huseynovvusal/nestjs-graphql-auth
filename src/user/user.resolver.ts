@@ -12,6 +12,7 @@ import { UserService } from './user.service';
 import { Logger, UseGuards } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
 import { GqlJwtGuard } from 'src/auth/guards/gql-jwt/gql-jwt.guard';
+import { CurrentUserDecorator } from 'src/auth/decorators/current-user.decorator';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -36,18 +37,15 @@ export class UserResolver {
     return await user.profile;
   }
 
-  /*   @Mutation(() => User)
-  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.userService.create(createUserInput);
-  } */
-
   @UseGuards(GqlJwtGuard)
   @Mutation(() => User)
   async updateUser(
-    @Args('id', { type: () => Int }) id: number,
+    @CurrentUserDecorator() user: User,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
-    return await this.userService.update(id, updateUserInput);
+    this.logger.debug(`Updating user with ID: ${user.id}`);
+
+    return await this.userService.update(user.id, updateUserInput);
   }
 
   @Mutation(() => Boolean)
