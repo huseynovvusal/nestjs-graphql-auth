@@ -8,6 +8,7 @@ import { BcryptProvider } from './providers/bcrypt.provider';
 import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
+import { GenerateTokensProvider } from './providers/generate-tokens.provider';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ConfigModule } from '@nestjs/config';
       useClass: BcryptProvider,
     },
     BcryptProvider,
+    GenerateTokensProvider,
   ],
 })
 export class AuthModule {}

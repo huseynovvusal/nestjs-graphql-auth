@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { CreateUserInput } from 'src/user/dto/create-user.input';
@@ -6,10 +6,8 @@ import { Repository } from 'typeorm';
 import { HashingProvider } from './providers/hashing.provider';
 import { Role } from 'src/enums/role.enum';
 import { LoginInput } from './dto/login.input';
-import { AuthJwtPayload } from './types/auth-jwt-payload';
-import { JwtService } from '@nestjs/jwt';
-import jwtConfig from './config/jwt.config';
-import { ConfigType } from '@nestjs/config';
+import { GenerateTokensProvider } from './providers/generate-tokens.provider';
+import { AuthPayload } from './entities/auth-payload';
 
 @Injectable()
 export class AuthService {
@@ -17,9 +15,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly hashingPrivider: HashingProvider,
-    private readonly jwtService: JwtService,
-    @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private readonly generateTokensProvider: GenerateTokensProvider,
   ) {}
 
   async signup(createUserInput: CreateUserInput): Promise<User> {
@@ -36,7 +32,7 @@ export class AuthService {
     return await this.userRepository.save(user);
   }
 
-  async login({ email, password }: LoginInput) {
+  async login({ email, password }: LoginInput): Promise<AuthPayload> {
     const user = await this.userRepository.findOneByOrFail({ email });
 
     const passwordMatch = await this.hashingPrivider.comparePassword(
@@ -48,19 +44,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return user;
+    const { accessToken, refreshToken } =
+      await this.generateTokensProvider.generateTokens(user);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
-
-  /*   private async generateToken(userId: number) {
-    const payload: AuthJwtPayload = { sub: userId };
-
-    const accessToken = await this.jwtService.signAsync(payload, {
-      audience: this.jwtConfiguration.audience,
-      issuer: this.jwtConfiguration.issuer,
-      secret: this.jwtConfiguration.secret,
-      expiresIn: this.jwtConfiguration.accessTokenTtl,
-    });
-
-    return accessToken;
-  } */
 }
