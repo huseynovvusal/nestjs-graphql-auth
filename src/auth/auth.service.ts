@@ -8,6 +8,8 @@ import { Role } from 'src/enums/role.enum';
 import { LoginInput } from './dto/login.input';
 import { GenerateTokensProvider } from './providers/generate-tokens.provider';
 import { AuthPayload } from './entities/auth-payload';
+import { RefreshTokenInput } from './dto/reresh-token.input';
+import { RefreshTokensProvider } from './providers/refresh-tokens.provider';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +18,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly hashingPrivider: HashingProvider,
     private readonly generateTokensProvider: GenerateTokensProvider,
+    private readonly refreshTokensProvider: RefreshTokensProvider,
   ) {}
 
   async signup(createUserInput: CreateUserInput): Promise<User> {
@@ -61,5 +64,11 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async refreshToken(
+    refreshTokenInput: RefreshTokenInput,
+  ): Promise<AuthPayload> {
+    return await this.refreshTokensProvider.refreshTokens(refreshTokenInput);
   }
 }

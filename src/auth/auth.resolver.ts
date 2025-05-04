@@ -4,6 +4,7 @@ import { CreateUserInput } from 'src/user/dto/create-user.input';
 import { AuthService } from './auth.service';
 import { AuthPayload } from './entities/auth-payload';
 import { LoginInput } from './dto/login.input';
+import { RefreshTokenInput } from './dto/reresh-token.input';
 
 @Resolver()
 export class AuthResolver {
@@ -17,5 +18,12 @@ export class AuthResolver {
   @Mutation(() => AuthPayload)
   async login(@Args('loginInput') loginInput: LoginInput) {
     return await this.authService.login(loginInput);
+  }
+
+  @Mutation(() => AuthPayload)
+  async refreshToken(
+    @Args('refreshTokenInput') refreshTokenInput: RefreshTokenInput,
+  ) {
+    return await this.authService.refreshToken(refreshTokenInput);
   }
 }

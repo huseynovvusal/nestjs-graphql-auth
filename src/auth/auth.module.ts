@@ -11,9 +11,12 @@ import { ConfigModule } from '@nestjs/config';
 import { GenerateTokensProvider } from './providers/generate-tokens.provider';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { RefreshTokensProvider } from './providers/refresh-tokens.provider';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
+    UserModule,
     TypeOrmModule.forFeature([User]),
     ConfigModule.forFeature(jwtConfig),
     JwtModule.registerAsync(jwtConfig.asProvider()),
@@ -29,6 +32,7 @@ import { PassportModule } from '@nestjs/passport';
     BcryptProvider,
     GenerateTokensProvider,
     JwtStrategy,
+    RefreshTokensProvider,
   ],
 })
 export class AuthModule {}
