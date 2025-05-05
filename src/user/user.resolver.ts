@@ -13,6 +13,9 @@ import { Logger, UseGuards } from '@nestjs/common';
 import { UpdateUserInput } from './dto/update-user.input';
 import { GqlJwtGuard } from 'src/auth/guards/gql-jwt/gql-jwt.guard';
 import { CurrentUserDecorator } from 'src/auth/decorators/current-user.decorator';
+import { RolesDecorator } from 'src/auth/decorators/roles.decorator.decorator';
+import { Role } from 'src/enums/role.enum';
+import { RolesGuard } from 'src/auth/guards/roles/roles.guard';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -37,6 +40,8 @@ export class UserResolver {
     return await user.profile;
   }
 
+  @RolesDecorator(Role.ADMIN)
+  @UseGuards(RolesGuard)
   @UseGuards(GqlJwtGuard)
   @Mutation(() => User)
   async updateUser(
