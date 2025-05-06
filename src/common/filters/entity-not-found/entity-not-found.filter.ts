@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, NotFoundException } from '@nestjs/common';
-import { GqlArgumentsHost, GqlExceptionFilter } from '@nestjs/graphql';
+import { GqlExceptionFilter } from '@nestjs/graphql';
 import { EntityNotFoundError } from 'typeorm';
 
 @Catch(EntityNotFoundError)
